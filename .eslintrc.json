@@ -14,7 +14,7 @@
     "es6": true
   },
   "rules": {
-    "no-console": "error",
+    "no-console": "warn",
     "prettier/prettier": ["error", { "singleQuote": true }],
     "simple-import-sort/imports": "error",
     "sort-imports": "off",

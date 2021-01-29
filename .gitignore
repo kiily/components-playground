@@ -7,6 +7,7 @@
 .yarn/cache
 .yarn/unplugged
 .yarn/install-state.gz
+.yarn/build-state.yml
 .eslintcache
 
 # testing

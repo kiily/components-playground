@@ -32,12 +32,10 @@ const App: React.FC = () => {
         cropDimensions={cropDimensions}
       />
 
-      {resultSrc && (
-        <div className="App-crop-result-container">
-          <span>Result:</span>
-          <img src={resultSrc} />
-        </div>
-      )}
+      <div className="App-crop-result-container">
+        <span>Result:</span>
+        {resultSrc && <img src={resultSrc} />}
+      </div>
     </div>
   );
 };

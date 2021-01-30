@@ -13,8 +13,9 @@
 .App-crop-result-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  span {
-    margin: 20px 0;
-  }
+  height: 1000px;
+}
+
+span {
+  margin: 20px 0;
 }

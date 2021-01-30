@@ -68,7 +68,6 @@ const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({
       if (tempCanvas && canvasRef.current) {
         const canvasCtx = tempCanvas.getContext('2d');
         canvasCtx?.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-
         const height = selectedArea.bottom - selectedArea.top;
         const width = selectedArea.right - selectedArea.left;
 

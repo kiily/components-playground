@@ -3,8 +3,8 @@ import React from 'react';
 
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders image Crop feedback', () => {
   const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const spanElement = getByText(/image Crop feedback/i);
+  expect(spanElement).toBeInTheDocument();
 });

@@ -24,6 +24,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      <span>Image Crop feedback:</span>
       <ImageCropFeedback
         imageUrl={imageUrl}
         defaultCrop={defaultCrop}

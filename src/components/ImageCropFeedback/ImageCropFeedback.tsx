@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useDrawCanvasImage } from '../../lib/custom-hooks';
+import { hasAllDimensions } from '../../lib/utils';
 import styles from './ImageCropFeedback.module.scss';
 
 export type CropDimensions = {
@@ -16,11 +17,9 @@ type ImageCropFeedbackProps = {
   defaultCrop: CropDimensions;
   cropDimensions?: PartialCropDimensions;
   imageUrl: string;
-  onAreaSelect: ({ top, left, right, bottom }: PartialCropDimensions) => void;
+  onAreaSelect: ({ top, left, right, bottom }: PartialCropDimensions, cropData?: string) => void;
 };
 
-const hasAllDimensions = (crop: PartialCropDimensions) =>
-  crop.bottom && crop.left && crop.top && crop.right;
 const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({
   imageUrl,
   defaultCrop,
@@ -29,7 +28,9 @@ const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({
 }) => {
   const [clickCounter, setClickCounter] = useState<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { image, loadingStatus } = useDrawCanvasImage(canvasRef, { defaultCrop, imageUrl });
+  const tempCropCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  const { image, loadingStatus } = useDrawCanvasImage(canvasRef, { crop: defaultCrop, imageUrl });
 
   useEffect(() => {
     if (canvasRef.current && image && cropDimensions && hasAllDimensions(cropDimensions)) {
@@ -55,20 +56,43 @@ const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({
       onAreaSelect({ top: offsetY, left: offsetX });
       setClickCounter((prevCounter) => prevCounter + 1);
     } else if (clickCounter === 1 && cropDimensions) {
-      onAreaSelect({
+      const selectedArea = {
         top: cropDimensions.top,
         left: cropDimensions.left,
         bottom: offsetY,
         right: offsetX,
-      });
+      } as CropDimensions;
       setClickCounter(0);
+      const tempCanvas = tempCropCanvasRef.current;
+      // At this point here we can draw the crop
+      if (tempCanvas && canvasRef.current) {
+        const canvasCtx = tempCanvas.getContext('2d');
+        const height = selectedArea.bottom - selectedArea.top;
+        const width = selectedArea.right - selectedArea.left;
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+        canvasCtx?.drawImage(
+          image,
+          // Make up for the negative values
+          width >= 0 ? selectedArea.left : selectedArea.right,
+          height >= 0 ? selectedArea.top : selectedArea.bottom,
+          Math.abs(width),
+          Math.abs(height),
+          0,
+          0,
+          Math.abs(width),
+          Math.abs(height)
+        );
+        const dataUrl = tempCanvas.toDataURL();
+        onAreaSelect(selectedArea, dataUrl);
+      }
     }
   };
   return (
     <div className={styles.imageCropContainer}>
-      <canvas ref={canvasRef} onClick={onCanvasClicked}>
-        {loadingStatus === 'loading' && 'LOADING IMAGE...'}
-      </canvas>
+      <canvas ref={canvasRef} onClick={onCanvasClicked} />
+      <canvas hidden ref={tempCropCanvasRef} width={500} height={500} style={{ opacity: 0 }} />
+      {loadingStatus === 'loading' && 'LOADING IMAGE...'}
     </div>
   );
 };

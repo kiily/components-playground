@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
 
 import { CropDimensions } from '../../components/ImageCropFeedback/ImageCropFeedback';
+import { hasAllDimensions } from '../utils';
 
 type LoadingStatus = 'idle' | 'loading' | 'resolved';
 
@@ -16,17 +17,18 @@ const onImageLoadPromise = (image: HTMLImageElement, imageUrl: string): Promise<
   });
 export const useDrawCanvasImage = (
   canvasRef: RefObject<HTMLCanvasElement>,
-  { defaultCrop, imageUrl }: { defaultCrop: CropDimensions; imageUrl: string }
+  { crop, imageUrl }: { crop: CropDimensions; imageUrl: string }
 ): { image: HTMLImageElement; loadingStatus: LoadingStatus } => {
   const imageRef = useRef<HTMLImageElement>(new Image());
   const [loadingStatus, setLoadingStatus] = useState<{ status: LoadingStatus }>({
     status: 'idle',
   });
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && hasAllDimensions(crop)) {
       const canvas = canvasRef.current;
       const canvasCtx = canvas.getContext('2d');
       const image = imageRef.current;
+      image.crossOrigin = 'Anonymous';
       setLoadingStatus({ status: 'loading' });
       const draw = async () => {
         const loadedImage = await onImageLoadPromise(image, imageUrl);
@@ -35,7 +37,7 @@ export const useDrawCanvasImage = (
         if (canvasCtx) {
           canvasCtx.drawImage(loadedImage, 0, 0);
           canvasCtx.strokeStyle = 'white';
-          const { right, left, top, bottom } = defaultCrop;
+          const { right, left, top, bottom } = crop;
           const cropWidth = right - left;
           const cropHeight = bottom - top;
           canvasCtx.strokeRect(left, top, cropWidth, cropHeight);
@@ -44,6 +46,6 @@ export const useDrawCanvasImage = (
       };
       draw();
     }
-  }, [imageRef.current, canvasRef.current, top]);
+  }, [imageRef.current, canvasRef.current, crop, imageUrl]);
   return { image: imageRef.current, loadingStatus: loadingStatus.status };
 };

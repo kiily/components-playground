@@ -4,9 +4,9 @@
 
 # Implementation Details
 
-Template CRA PWA, with TS, SCSS and customized CI/CD environment.
+Components playground in React based off this [template](https://github.com/kiily/react-ts).
 
-You can find all the relevant details about what is included in this repo here: [Template Details](https://www.notion.so/kiilysden/React-TS-PWA-0ff8c6be6ae249bbbf3baebcf54703d9)
+Some details about the original template: [Template Details](https://www.notion.so/kiilysden/React-TS-PWA-0ff8c6be6ae249bbbf3baebcf54703d9)
 
 # Getting started:
 
@@ -14,19 +14,6 @@ By default, this project uses `yarn 2` (`berry`) to manage modules. Feel free to
 
 `yarn install`
 
-## Make it your own:
-
-This template has been prepopulated with some variables to act as placeholders for things that should be changed when creating a new app.
-
-`META_TITLE` --> the title of the app in `index.html` and short_name in `manifest.json`.
-
-`META_PWA_NAME`--> the name of the app in `manifest.json`
-
-`META_DESCRIPTION` --> the description of the app in `index.html` and `manifest.json`.
-
-`META_LONG_TITLE` --> the long title for the app in `manifest.json`.
-
-Lastly, don't forget to change the relevant fields in `package.json`
 
 ## Available Scripts
 

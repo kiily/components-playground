@@ -91,7 +91,7 @@ const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({
   };
   return (
     <div className={styles.imageCropContainer}>
-      <canvas ref={canvasRef} onClick={onCanvasClicked} />
+      <canvas ref={canvasRef} onClick={onCanvasClicked} role="img" />
       <canvas hidden ref={tempCropCanvasRef} width={500} height={500} style={{ opacity: 0 }} />
       {loadingStatus === 'loading' && 'LOADING IMAGE...'}
     </div>
